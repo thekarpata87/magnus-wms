@@ -3,6 +3,8 @@
 Prototipo construido a partir de `Investigacion_WMS.pdf` (componentes, flujos, UX/UI y KPIs de un WMS).
 Cubre la **Fase 1 (MVP: inventario confiable)** y parte de la **Fase 2 (eficiencia de piso)**.
 
+**Demo en línea:** https://thekarpata87.github.io/magnus-wms/ (se publica sola en cada push a `main`).
+
 ```bash
 npm install
 npm run dev        # http://localhost:5173
