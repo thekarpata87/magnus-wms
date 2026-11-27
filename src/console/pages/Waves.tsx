@@ -40,7 +40,11 @@ export function Waves() {
       </div>
 
       <div className="grid-2-1">
-        <Card pad={false} title={`Pedidos por liberar (${pending.length})`}>
+        <Card pad={false} title={`Pedidos por liberar (${pending.length})`} actions={
+          <Button size="sm" disabledReason={can(user.role, "data.reset") ? undefined : whyNot("data.reset")}
+            onClick={() => { dispatch({ type: "SIMULATE_ORDERS", count: 6, user: user.id }); toast("6 pedidos nuevos recibidos de las integraciones (simulación)", "info"); }}>
+            Simular pedidos entrantes
+          </Button>}>
           <div className="toolbar">
             <select className="input" value={carrier} onChange={(e) => setCarrier(e.target.value)} aria-label="Transportista">
               <option value="">Todos los transportistas</option>

@@ -379,6 +379,7 @@ export type DomainAction =
   | { type: "GENERATE_REPLENISH"; skus: string[]; user: string }
   | { type: "CONFIRM_REPLENISH"; task: string; qty: number; user: string }
   | { type: "CREATE_PO"; supplier: string; lines: { sku: string; qty: number }[]; user: string }
+  | { type: "SIMULATE_ORDERS"; count: number; user: string }
   | { type: "QC_DECIDE"; sku: string; lot?: string; qty: number; decision: QcDecisionType; note: string; user: string }
   | { type: "HOLD_LOT"; lots: string[]; reason: string; user: string }
   | { type: "RELEASE_LOT"; lot: string; note: string; user: string }

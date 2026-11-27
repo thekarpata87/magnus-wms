@@ -18,7 +18,10 @@ export function PackFlow() {
   const ready = state.orders.filter((o) => o.stage === "surtido" && !o.hold && !pendingWithdraw(state, o.id));
   const blocked = state.orders.filter((o) => o.stage === "surtido" && (o.hold || pendingWithdraw(state, o.id)));
   // Contenedor del carro (surtido por lote o zona): la etiqueta del contenedor identifica al pedido
-  const toteFor = (order: string) => [...state.tasks].reverse().find((t) => t.totes?.some((x) => x.order === order))?.totes?.find((x) => x.order === order)?.tote;
+  // En surtido por zona un pedido llega en un contenedor por zona: todos lo identifican y hay que reunirlos.
+  const totesFor = (order: string) => state.tasks.filter((t) => t.type === "surtir" && t.totes)
+    .flatMap((t) => t.totes!.filter((x) => x.order === order).map((x) => ({ tote: x.tote, zone: t.zone })));
+  const toteFor = (order: string) => totesFor(order).at(-1)?.tote;
   const [orderId, setOrderId] = useState<string | null>(null);
   const [checked, setChecked] = useState<Record<string, number>>({});
   const [box, setBox] = useState<string | null>(null);
@@ -48,7 +51,7 @@ export function PackFlow() {
         <Steps items={["Pedido", "Validar artículos", "Caja y peso", "Guía"]} current={0} />
         <div className="hh-instr"><span>Escanea el pedido o el contenedor</span><strong>{ready.length} pedidos listos</strong></div>
         <ScanField placeholder="Escanea el pedido o el contenedor" onScan={(c) => {
-          const x = ready.find((r) => r.id === c) ?? ready.find((r) => toteFor(r.id) === c);
+          const x = ready.find((r) => r.id === c) ?? ready.find((r) => totesFor(r.id).some((x) => x.tote === c));
           if (x) { fb(true, x.id); setOrderId(x.id); }
           else if (blocked.some((b) => b.id === c)) fb(false, `${c} tiene un lote retenido: espera el retiro a cuarentena`);
           else fb(false, state.orders.some((r) => r.id === c) ? `${c} aún no está surtido` : "Pedido no reconocido");
@@ -56,7 +59,7 @@ export function PackFlow() {
         <div className="hh-list">
           {ready.map((r) => (
             <button key={r.id} className="hh-row" onClick={() => setOrderId(r.id)}>
-              <span><strong>{r.id}{toteFor(r.id) && ` · ${toteFor(r.id)}`}</strong><small>{r.customer} · {r.carrier}</small></span>
+              <span><strong>{r.id}{totesFor(r.id).length > 0 && ` · ${totesFor(r.id).map((x) => x.tote).join(" + ")}`}</strong><small>{r.customer} · {r.carrier}</small></span>
               <em>{r.lines.reduce((s, l) => s + l.picked, 0)} pzas</em>
             </button>
           ))}
@@ -70,6 +73,7 @@ export function PackFlow() {
   }
 
   const lines = o.lines.filter((l) => l.picked > 0);
+  const gather = totesFor(o.id);
   const allChecked = lines.every((l) => (checked[l.sku] ?? 0) >= l.picked);
   const units = lines.reduce((s, l) => s + l.picked, 0);
   const checkedUnits = lines.reduce((s, l) => s + Math.min(l.picked, checked[l.sku] ?? 0), 0);
@@ -99,6 +103,11 @@ export function PackFlow() {
         }}><Printer size={22} /> Cerrar caja e imprimir guía</button>
       ) : undefined}>
       <Steps items={["Pedido", "Validar artículos", "Caja y peso", "Guía"]} current={phase} />
+      {gather.length > 1 && phase === 1 && (
+        <div className="hh-instr"><span>Consolida {gather.length} contenedores de este pedido</span>
+          <strong className="mono">{gather.map((x) => x.tote).join(" + ")}</strong>
+          <small>{gather.map((x) => `${x.tote}${x.zone ? ` (zona ${x.zone})` : ""}`).join(" · ")}</small></div>
+      )}
       {phase === 1 && <>
         <ScanField placeholder="Escanea cada artículo" onScan={onItem}
           simulate={nextSku ? [{ label: "Siguiente artículo", code: state.products.find((p) => p.sku === nextSku.sku)!.barcode }, { label: "Artículo ajeno", code: state.products.find((p) => p.sku === "TOR-14")!.barcode, wrong: true }] : []} />

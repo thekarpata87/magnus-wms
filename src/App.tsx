@@ -1,5 +1,5 @@
 import { HashRouter, Link, Route, Routes } from "react-router-dom";
-import { Monitor, Smartphone, Columns2, Warehouse } from "lucide-react";
+import { Monitor, Smartphone, Columns2 } from "lucide-react";
 import { StoreProvider } from "./core/store";
 import { ToastProvider } from "./ui/kit";
 import { ConsoleLayout } from "./console/Layout";
@@ -68,7 +68,7 @@ function Landing() {
   return (
     <div className="landing">
       <div className="landing-in">
-        <div className="row gap-3"><span className="logo lg"><Warehouse size={22} /></span><div><h1>Almacena</h1><p className="muted">Prototipo funcional de WMS · Fase 1 (MVP) + funciones de eficiencia de piso</p></div></div>
+        <div className="row gap-3"><img className="logo lg" src={`${import.meta.env.BASE_URL}magnus-logo.png`} alt="" /><div><h1>WMS <span className="by">by Magnus Manufactura</span></h1><p className="muted">Prototipo funcional de WMS · Fase 1 (MVP) + funciones de eficiencia de piso</p></div></div>
         <div className="landing-grid">
           {cards.map((c) => (
             <Link key={c.to} to={c.to} className="landing-card">

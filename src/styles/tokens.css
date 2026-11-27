@@ -1,5 +1,5 @@
 /* =========================================================
-   Almacena DS — tokens
+   Magnus WMS DS — tokens (WMS by Magnus Manufactura)
    Dos productos, un solo lenguaje:
    · Consola (escritorio): densa, clara, 13–14 px, filas de 36 px.
    · Handheld (piso): oscura de alto contraste, 18 px base, objetivos ≥ 56 px.
@@ -17,17 +17,21 @@
   --n-500: #5d6779; /* AA sobre n-0, n-25, n-50 y n-100 */
   --n-600: #4d5668;
   --n-700: #363e4e;
-  --n-800: #1f2533;
-  --n-900: #121722;
-  --n-950: #0b1019;
+  --n-800: #1b343b;
+  --n-900: #0F2329; /* Negro Magnus */
+  --n-950: #0F2329;
 
-  /* Marca: índigo (acciones primarias, foco, selección) */
-  --brand-50: #eef0ff;
-  --brand-100: #e0e3ff;
-  --brand-300: #a5adfc;
-  --brand-500: #6366f1;
-  --brand-600: #4f46e5;
-  --brand-700: #4338ca;
+  /* Marca Magnus Manufactura
+     Oscuro #1C7C63 → botones, enlaces y foco (5.11:1 con blanco)
+     Base   #2FB896 → acentos sobre fondo oscuro o con texto negro encima (blanco sobre Base NO pasa: 2.49:1)
+     Claro  #8FD9C4 → tintes y acentos en el handheld oscuro */
+  --brand-50: #e8f7f2;
+  --brand-100: #d2efe6;
+  --brand-300: #8FD9C4; /* Claro */
+  --brand-500: #2FB896; /* Base */
+  --brand-600: #1C7C63; /* Oscuro */
+  --brand-700: #155f4c; /* texto sobre tintes y hover */
+  --ink: #0F2329;       /* Negro Magnus */
 
   /* Estados semánticos (documentos, tareas, pedidos) */
   --st-pending-fg: #4d5668;  --st-pending-bg: #eef1f5;  --st-pending-dot: #8a94a6;

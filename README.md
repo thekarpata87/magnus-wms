@@ -1,4 +1,4 @@
-# Almacena — prototipo funcional de WMS
+# WMS by Magnus Manufactura — prototipo funcional
 
 Prototipo construido a partir de `Investigacion_WMS.pdf` (componentes, flujos, UX/UI y KPIs de un WMS).
 Cubre la **Fase 1 (MVP: inventario confiable)** y parte de la **Fase 2 (eficiencia de piso)**.
@@ -11,6 +11,9 @@ npm run dev        # http://localhost:5173
 Abre el inicio y elige **Vista dividida** para ver consola y handheld lado a lado: lo que escaneas en el
 piso aparece en el tablero al instante. El handheld también funciona en tu celular en la misma red
 (`http://<tu-ip>:5173/#/handheld`), aunque cada dispositivo guarda sus propios datos.
+
+Para generar trabajo nuevo en la demo usa **Oleadas → Simular pedidos entrantes** (6 pedidos con SKUs de varias
+zonas, como si llegaran de Shopify, Amazon, Mercado Libre o B2B).
 
 ## Qué hay
 
@@ -31,7 +34,8 @@ excursiones y evaluación; validador y generador de etiquetas GS1-128/SSCC; bloq
 **Handheld** (`#/handheld`) — Inicio de sesión por turno · Siguiente tarea dirigida · Recibir (OC → artículo →
 cantidad/lote/caducidad → etiqueta) · Ubicar (putaway sugerido) · Surtir (ruta en serpentina, FEFO,
 excepciones; en lote/zona: preparar carro, una sola ruta, sin re-escanear la ubicación compartida y validación del
-contenedor de cada pedido) · Empacar (por pedido o escaneando el contenedor del carro; validar, caja, báscula, guía) · Contar (a ciegas) · **Reabastecer** picking desde reserva · **Cargar** en andén (valida transportista por caja) · **Devolver** (RMA → inspección →
+contenedor de cada pedido) · Empacar (por pedido o escaneando cualquier contenedor del carro; en surtido por zona indica qué contenedores
+reunir; validar, caja, báscula, guía) · Contar (a ciegas) · **Reabastecer** picking desde reserva · **Cargar** en andén (valida transportista por caja) · **Devolver** (RMA → inspección →
 disposición: reubicar, cuarentena o merma) · **Retirar** lote en recall a cuarentena · Recepción con etiqueta **GS1-128** (lote, caducidad y cantidad
 en un escaneo) · Consultar cualquier código (incluye GS1) ·
 Modo sin señal con cola · **Preferencias por operario** (mano dominante con layout espejo, tamaño de letra

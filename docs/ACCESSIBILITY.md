@@ -1,4 +1,4 @@
-# Auditoría de accesibilidad: Almacena (consola + handheld)
+# Auditoría de accesibilidad: Magnus WMS (consola + handheld)
 **Estándar:** WCAG 2.1 AA | **Fecha:** 26 nov 2026 | **Método:** contraste calculado por script, revisión de código, teclado manual en navegador, axe-core 4 en 16 páginas de consola + drawers/modales/paleta y 8 pantallas de handheld.
 
 ### Resumen
@@ -29,7 +29,7 @@ Resultado final de axe-core (etiquetas wcag2a/2aa/21a/21aa): **0 violaciones** e
 | 13 | Drawers y modales sin trampa de foco ni retorno del foco | 2.4.3 / 2.1.2 | 🔴 Crítico | Hook `useDialog`: foco al abrir, Tab cíclico, Esc cierra, el foco vuelve al disparador |
 | 14 | Gráfica de temperatura solo con puntero | 2.1.1 | 🟡 Mayor | Enfocable; ←/→/Inicio/Fin recorren lecturas; el tooltip se anuncia (`aria-live`) |
 | 15 | Sin enlace para saltar la navegación | 2.4.1 | 🟢 Menor | "Saltar al contenido" visible al recibir foco |
-| 16 | Título de pestaña fijo en todas las rutas | 2.4.2 | 🟢 Menor | `Salidas · Almacena`, `Handheld · Almacena`, etc. |
+| 16 | Título de pestaña fijo en todas las rutas | 2.4.2 | 🟢 Menor | `Salidas · Magnus WMS`, `Handheld · Magnus WMS`, etc. |
 | 17 | Pestañas sin patrón de teclado ARIA | 2.1.1 | 🟢 Menor | Flechas/Inicio/Fin; solo la activa en el orden de Tab |
 | 18 | Menú de usuario no cerraba con Esc | 2.1.1 | 🟢 Menor | Esc cierra y regresa el foco al botón |
 | 19 | Animaciones sin respeto a `prefers-reduced-motion` | 2.3.3 (AAA, buena práctica) | 🟢 Menor | Animaciones y transiciones a 1 ms |

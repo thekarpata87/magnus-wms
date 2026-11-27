@@ -43,7 +43,7 @@ export function MobileApp() {
   const user = state.users.find((u) => u.id === userId);
   const prefsState = usePrefsState(user?.id);
   const ctx = useMemo(() => (user ? { user, logout: () => setUserId(undefined) } : null), [user, setUserId]);
-  useEffect(() => { if (!framed) document.title = "Handheld · Almacena"; }, [framed]);
+  useEffect(() => { if (!framed) document.title = "Handheld · Magnus WMS"; }, [framed]);
 
   return (
     <div className={`hh-root ${framed ? "framed" : ""} ${prefsClass(prefsState.prefs)}`}>
@@ -105,8 +105,8 @@ function Login({ onLogin }: { onLogin: (id: string) => void }) {
   return (
     <div className="hh-screen">
       <div className="hh-body hh-login">
-        <div className="hh-logo">A</div>
-        <h1>Almacena · Piso</h1>
+        <img className="hh-logo" src={`${import.meta.env.BASE_URL}magnus-logo.png`} alt="" />
+        <h1>Magnus WMS · Piso</h1>
         <p className="hh-muted">{state.warehouse.code} · {state.warehouse.name}</p>
         <div className="hh-seg" role="radiogroup" aria-label="Turno">
           {["Matutino", "Vespertino", "Nocturno"].map((s) => (

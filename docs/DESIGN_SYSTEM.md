@@ -1,4 +1,4 @@
-# Almacena DS — sistema de diseño del prototipo WMS
+# Magnus WMS DS — sistema de diseño del prototipo
 
 Un WMS tiene **dos productos de UX** (ver investigación, "UX/UI de un WMS"). Compartimos tokens y
 semántica de estados, pero cada uno tiene su densidad y patrones:
@@ -20,7 +20,10 @@ Tokens: `src/styles/tokens.css`.
 > solo marcas e iconos; los bordes de controles usan `--bd-control` (≥ 3:1); nunca bajar contraste con `opacity`.
 
 - **Neutros** `--n-0 … --n-950` (slate).
-- **Marca** `--brand-*` (índigo): acción primaria, foco, selección. Distinto del azul de "en proceso".
+- **Marca Magnus Manufactura** `--brand-*`: Oscuro `#1C7C63` (botones, enlaces, foco; 5.11:1 con blanco),
+  Base `#2FB896` (acentos sobre fondo oscuro o con texto negro; **nunca texto blanco encima**: 2.49:1),
+  Claro `#8FD9C4` (tintes y acentos en el handheld). Negro Magnus `#0F2329` en títulos, menú lateral y tooltips;
+  el handheld usa superficies verde-negro derivadas (`#0b1c21`, `#13292f`, `#1a343b`). Logo: `public/magnus-logo.png`.
 - **Estados** (idénticos en todo el sistema):
 
 | Estado | Token | Uso |

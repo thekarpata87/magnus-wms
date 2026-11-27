@@ -3,7 +3,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, PackageOpen, Truck, Waves, ListChecks, Boxes, Tag, Map, ClipboardCheck, History,
   GitBranch, BarChart3, DoorOpen, Undo2, ShieldCheck, ShieldAlert, RefreshCw, ScrollText, SlidersHorizontal, Users, Search, ChevronDown, Smartphone, RotateCcw,
-  Warehouse, PanelLeftClose, PanelLeft, WifiOff,
+  PanelLeftClose, PanelLeft, WifiOff,
 } from "lucide-react";
 import { useStore, useSessionUser, ROLE_LABEL, can, whyNot } from "../core/store";
 import { alerts, lookup, quarantineItems, replenishPlan, type LookupHit } from "../core/engine";
@@ -74,7 +74,7 @@ export function ConsoleLayout() {
   const current = groups.flatMap((g) => g.items).filter((i) => loc.pathname === i.to || (i.to !== "/consola" && loc.pathname.startsWith(i.to))).at(-1);
 
   // WCAG 2.4.2: título de página por ruta
-  useEffect(() => { document.title = `${current?.label ?? "Tablero"} · Almacena`; }, [current?.label]);
+  useEffect(() => { document.title = `${current?.label ?? "Tablero"} · Magnus WMS`; }, [current?.label]);
 
   // WCAG 2.1.1: las filas que abren detalle se operan con teclado (Tab + Enter/Espacio)
   useEffect(() => {
@@ -83,15 +83,21 @@ export function ConsoleLayout() {
       const cells = [...tr.cells].map((c) => c.innerText.replace(/\s+/g, " ").trim()).filter(Boolean).slice(0, 3);
       tr.setAttribute("aria-label", `${cells.join(" · ")} — abrir detalle`);
     });
-    mark();
-    const mo = new MutationObserver(mark);
+    // Tablas que se desplazan en pantallas angostas: deben poder enfocarse para desplazarse con teclado
+    const scrollables = () => document.querySelectorAll<HTMLTableElement>("table.tbl").forEach((t) => {
+      if (t.scrollWidth > t.clientWidth + 1) { if (!t.hasAttribute("tabindex")) t.tabIndex = 0; } else if (t.tabIndex === 0) t.removeAttribute("tabindex");
+    });
+    const markAll = () => { mark(); scrollables(); };
+    markAll();
+    window.addEventListener("resize", scrollables);
+    const mo = new MutationObserver(markAll);
     mo.observe(document.body, { childList: true, subtree: true });
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement;
       if ((e.key === "Enter" || e.key === " ") && t.matches?.("tr.clickable")) { e.preventDefault(); t.click(); }
     };
     document.addEventListener("keydown", onKey);
-    return () => { mo.disconnect(); document.removeEventListener("keydown", onKey); };
+    return () => { mo.disconnect(); document.removeEventListener("keydown", onKey); window.removeEventListener("resize", scrollables); };
   }, []);
 
   return (
@@ -100,8 +106,8 @@ export function ConsoleLayout() {
         <a href="#" className="skip-link" onClick={(e) => { e.preventDefault(); document.getElementById("contenido")?.focus(); }}>Saltar al contenido</a>
         <aside className="side">
           <div className="side-brand">
-            <span className="logo"><Warehouse size={18} /></span>
-            {!collapsed && <div><strong>Almacena</strong><small>{state.warehouse.code} · {state.warehouse.name}</small></div>}
+            <img className="logo" src={`${import.meta.env.BASE_URL}magnus-logo.png`} alt="Magnus Manufactura" />
+            {!collapsed && <div><strong>Magnus WMS</strong><em>by Magnus Manufactura</em><small>{state.warehouse.code} · {state.warehouse.name}</small></div>}
           </div>
           <nav aria-label="Navegación principal">
             {groups.map((g) => (

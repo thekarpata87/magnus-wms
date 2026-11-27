@@ -1,4 +1,4 @@
-// Componentes base del Almacena DS (consola). Ver docs/DESIGN_SYSTEM.md
+// Componentes base del Magnus WMS DS (consola). Ver docs/DESIGN_SYSTEM.md
 import { createContext, useCallback, useContext, useEffect, useId, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { X, CheckCircle2, AlertTriangle, Info } from "lucide-react";
 import type { Tone } from "./format";

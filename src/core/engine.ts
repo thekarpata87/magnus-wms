@@ -782,6 +782,36 @@ export function applyAction(prev: State, a: Action): State {
       log(s, ts, a.user, "Creó orden de compra", id, `${a.supplier} · ${lines.map((l) => `${l.qty} × ${l.sku}`).join(", ")}`);
       return s;
     }
+    case "SIMULATE_ORDERS": {
+      // Pedidos de prueba como si llegaran por integración (Shopify, Amazon, Mercado Libre, B2B).
+      // Cada uno combina SKUs de 2–3 zonas con existencia disponible, para ejercitar el surtido por zona.
+      const totals = skuTotals(s);
+      const byZone = new Map<string, Product[]>();
+      for (const p of s.products) if ((totals.get(p.sku)?.available ?? 0) >= 12) byZone.set(p.preferredZone, [...(byZone.get(p.preferredZone) ?? []), p]);
+      const zones = [...byZone.keys()].sort();
+      if (zones.length < 2) return prev;
+      const customers = ["Abarrotes San Juan", "Clínica Polanco", "ML — usuario cmora", "Amazon FBM #114-02", "Oficinas Insurgentes", "Hostal Coyoacán", "Shopify — Ana V.", "Café La Parroquia"];
+      const channels: Order["channel"][] = ["B2B", "B2B", "Mercado Libre", "Amazon", "B2B", "B2B", "Shopify", "B2B"];
+      const carriers: Order["carrier"][] = ["Estafeta", "DHL", "FedEx", "DHL", "Estafeta", "99 Minutos", "99 Minutos", "Estafeta"];
+      let n = Math.max(5000, ...s.orders.map((o) => Number(o.id.replace(/\D/g, "")) || 0));
+      const ids: string[] = [];
+      for (let i = 0; i < a.count; i++) {
+        const k = (s.seq + i) % customers.length;
+        const pickZones = zones.filter((_, zi) => (zi + i) % 3 !== 2 || zones.length === 2);
+        const lines = pickZones.map((z, zi) => {
+          const list = byZone.get(z)!;
+          const p = list[(s.seq + i * 3 + zi) % list.length];
+          return { sku: p.sku, qty: 1 + ((s.seq + i * 5 + zi) % 6), picked: 0, packed: 0, short: 0 };
+        }).filter((l, idx, arr) => arr.findIndex((x) => x.sku === l.sku) === idx);
+        n += 1;
+        const id = `PED-${n}`;
+        ids.push(id);
+        s.orders.push({ id, customer: customers[k], channel: channels[k], carrier: carriers[k], priority: i % 4 === 0 ? "alta" : "normal",
+          createdAt: ts, due: ts + (4 + i * 2) * 3_600_000, stage: "nuevo", lines });
+      }
+      log(s, ts, a.user, "Importó pedidos (simulación)", ids.join(", "), `${a.count} pedidos de integraciones e-commerce/B2B`);
+      return s;
+    }
     case "QC_DECIDE": {
       const item = quarantineItems(s, computeBalances(s), ts).find((x) => x.sku === a.sku && (x.lot ?? "") === (a.lot ?? ""));
       if (!item || a.qty <= 0 || a.qty > item.qty || a.note.trim().length < 10) return prev;
